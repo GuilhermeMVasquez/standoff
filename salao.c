@@ -46,28 +46,51 @@ void placeFirstGang(int n, int salon[n][n], int index, int firstGang, int second
     int row = index / n;
     int col = index % n;
 
-    if (canPlace(n, salon, row, col, 1))
+    if (!canPlace(n, salon, row, col, 1))
+        return;
+    else
     {
         salon[row][col] = 1;
         firstGang -= 1;
         if (firstGang == 0)
         {
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                    printf("%d ", salon[i][j]);
-                printf("\n");
-            }
-            printf("-----\n");
+            for (int i = 0; i < n * n; i++)
+                placeSecondGang(n, salon, i, secondGang, result);
         }
     }
-    else
-        return;
 
     if (firstGang != 0)
     {
         for (int i = index + 1; i < n * n; i++)
             placeFirstGang(n, salon, i, firstGang, secondGang, result);
+    }
+
+    salon[row][col] = 0;
+}
+
+void placeSecondGang(int n, int salon[n][n], int index, int secondGang, int *result)
+{
+    if (index > n * n)
+        return;
+
+    int row = index / n;
+    int col = index % n;
+
+    if (!canPlace(n, salon, row, col, 2))
+        return;
+    else
+    {
+        salon[row][col] = 2;
+        secondGang -= 1;
+
+        if (secondGang == 0 && checkResult(n, salon))
+            *result += 1;
+    }
+
+    if (secondGang != 0)
+    {
+        for (int i = index + 1; i < n * n; i++)
+            placeSecondGang(n, salon, i, secondGang, result);
     }
 
     salon[row][col] = 0;
@@ -106,13 +129,18 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
     }
     else
     {
+        int see = 0;
+
         for (int i = row - 1; i >= 0; i--)
         {
             if (salon[i][col] == 2)
                 return 0;
 
             if (salon[i][col] == 1)
+            {
+                see += 1;
                 break;
+            }
         }
 
         for (int i = row + 1; i < n; i++)
@@ -121,7 +149,10 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
                 return 0;
 
             if (salon[i][col] == 1)
+            {
+                see += 1;
                 break;
+            }
         }
 
         for (int i = col - 1; i >= 0; i--)
@@ -130,7 +161,10 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
                 return 0;
 
             if (salon[row][i] == 1)
+            {
+                see += 1;
                 break;
+            }
         }
 
         for (int i = col + 1; i < n; i++)
@@ -139,7 +173,10 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
                 return 0;
 
             if (salon[row][i] == 1)
+            {
+                see += 1;
                 break;
+            }
         }
 
         for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--)
@@ -148,7 +185,10 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
                 return 0;
 
             if (salon[i][j] == 1)
+            {
+                see += 1;
                 break;
+            }
         }
 
         for (int i = row + 1, j = col + 1; i < n && j < n; i++, j++)
@@ -157,7 +197,10 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
                 return 0;
 
             if (salon[i][j] == 1)
+            {
+                see += 1;
                 break;
+            }
         }
 
         for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++)
@@ -166,7 +209,10 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
                 return 0;
 
             if (salon[i][j] == 1)
+            {
+                see += 1;
                 break;
+            }
         }
 
         for (int i = row + 1, j = col - 1; i < n && j >= 0; i++, j--)
@@ -175,7 +221,99 @@ int canPlace(int n, int salon[n][n], int row, int col, int gang)
                 return 0;
 
             if (salon[i][j] == 1)
+            {
+                see += 1;
                 break;
+            }
+        }
+
+        if (see < 2)
+            return 0;
+    }
+
+    return 1;
+}
+
+int checkResult(int n, int salon[n][n])
+{
+    for (int row = 0; row < n; row++)
+    {
+        for (int col = 0; col < n; col++)
+        {
+            if (salon[row][col] == 1)
+            {
+                for (int i = row - 1; i >= 0; i--)
+                {
+                    if (salon[i][col] == 1)
+                        return 0;
+
+                    if (salon[i][col] == 2)
+                        break;
+                }
+
+                for (int i = row + 1; i < n; i++)
+                {
+                    if (salon[i][col] == 1)
+                        return 0;
+
+                    if (salon[i][col] == 2)
+                        break;
+                }
+
+                for (int i = col - 1; i >= 0; i--)
+                {
+                    if (salon[row][i] == 1)
+                        return 0;
+
+                    if (salon[row][i] == 2)
+                        break;
+                }
+
+                for (int i = col + 1; i < n; i++)
+                {
+                    if (salon[row][i] == 1)
+                        return 0;
+
+                    if (salon[row][i] == 2)
+                        break;
+                }
+
+                for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--)
+                {
+                    if (salon[i][j] == 1)
+                        return 0;
+
+                    if (salon[i][j] == 2)
+                        break;
+                }
+
+                for (int i = row + 1, j = col + 1; i < n && j < n; i++, j++)
+                {
+                    if (salon[i][j] == 1)
+                        return 0;
+
+                    if (salon[i][j] == 2)
+                        break;
+                }
+
+                for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++)
+                {
+                    if (salon[i][j] == 1)
+                        return 0;
+
+                    if (salon[i][j] == 2)
+                        break;
+                }
+
+                for (int i = row + 1, j = col - 1; i < n && j >= 0; i++, j--)
+                {
+                    if (salon[i][j] == 1)
+                        return 0;
+
+                    if (salon[i][j] == 2)
+                        break;
+                }
+            }
         }
     }
 
