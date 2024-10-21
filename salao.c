@@ -242,13 +242,18 @@ int checkResult(int n, int salon[n][n])
         {
             if (salon[row][col] == 1)
             {
+                int see = 0;
+
                 for (int i = row - 1; i >= 0; i--)
                 {
                     if (salon[i][col] == 1)
                         return 0;
 
                     if (salon[i][col] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
 
                 for (int i = row + 1; i < n; i++)
@@ -257,7 +262,10 @@ int checkResult(int n, int salon[n][n])
                         return 0;
 
                     if (salon[i][col] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
 
                 for (int i = col - 1; i >= 0; i--)
@@ -266,7 +274,10 @@ int checkResult(int n, int salon[n][n])
                         return 0;
 
                     if (salon[row][i] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
 
                 for (int i = col + 1; i < n; i++)
@@ -275,7 +286,10 @@ int checkResult(int n, int salon[n][n])
                         return 0;
 
                     if (salon[row][i] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
 
                 for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--)
@@ -284,7 +298,10 @@ int checkResult(int n, int salon[n][n])
                         return 0;
 
                     if (salon[i][j] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
 
                 for (int i = row + 1, j = col + 1; i < n && j < n; i++, j++)
@@ -293,7 +310,10 @@ int checkResult(int n, int salon[n][n])
                         return 0;
 
                     if (salon[i][j] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
 
                 for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++)
@@ -302,7 +322,10 @@ int checkResult(int n, int salon[n][n])
                         return 0;
 
                     if (salon[i][j] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
 
                 for (int i = row + 1, j = col - 1; i < n && j >= 0; i++, j--)
@@ -311,8 +334,14 @@ int checkResult(int n, int salon[n][n])
                         return 0;
 
                     if (salon[i][j] == 2)
+                    {
+                        see += 1;
                         break;
+                    }
                 }
+
+                if (see < 2)
+                    return 0;
             }
         }
     }
