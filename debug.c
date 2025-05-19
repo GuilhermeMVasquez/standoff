@@ -93,7 +93,9 @@ void placeSecondGang(int n, int salon[n][n], int index, int secondGang, int *res
                         printf("%d ", salon[i][j]);
                     printf("\n");
                 }
-                printf("-----\n");
+                for (int i = 0; i < 2 * n - 1; i++)
+                    printf("-");
+                printf("\n");
                 *result += 1;
             }
         }
